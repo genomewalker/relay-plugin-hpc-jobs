@@ -2,6 +2,17 @@
 
 List your Slurm jobs on demand, including state, runtime, node count and pending reason.
 
+The current implementation uses structured job rows with local text/state
+filtering. Search controls stay visible while the job list scrolls. At most 500
+rows are loaded, with the observed queue count and an explicit partial-results
+notice. Filters apply only to loaded rows. Missing Slurm, unavailable schedulers,
+malformed rows and incompatible helpers produce errors rather than an empty list.
+
+Component verification covers parser/limit/failure cases, package lifecycle,
+an actual scheduler query and manual native-UI search/filter/empty/large-queue
+checks. Installed-app and wheel/trackpad acceptance are still outstanding;
+this is not a release-ready claim.
+
 ## Status and compatibility
 
 Experimental native-tool package. Requires the Relay build that implements
@@ -28,8 +39,9 @@ and Uninstall are available in Settings. Safe mode suppresses all plugin tools.
 
 Slurm must be installed on the selected host. Job logs, resource history, submission and cancellation are not implemented.
 
-Only the captured pane/host/directory is used; switching tabs does not retarget
-an in-flight request. Remote hosts need a matching helper installed through Relay's
+The captured pane selects the connection; switching tabs does not retarget
+an in-flight request. Jobs belong to the connected user across all projects,
+not only the selected directory. Remote hosts need a matching helper installed through Relay's
 existing approved setup flow. Agent processes are never restarted by this plugin.
 
 ## Package verification
