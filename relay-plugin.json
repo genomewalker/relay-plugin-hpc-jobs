@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "apiVersion": 1,
+  "id": "relay.hpc-jobs",
+  "name": "HPC jobs",
+  "version": "0.1.0",
+  "repository": "genomewalker/relay-plugin-hpc-jobs",
+  "permissions": [
+    {
+      "kind": "remoteOperation",
+      "reason": "List your Slurm jobs on demand, including state, runtime, node count and pending reason."
+    }
+  ],
+  "contributions": [
+    {
+      "id": "main",
+      "kind": "tool",
+      "title": "HPC jobs",
+      "text": "List your Slurm jobs on demand, including state, runtime, node count and pending reason.",
+      "operation": "hpcJobs"
+    }
+  ]
+}
