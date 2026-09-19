@@ -1,59 +1,60 @@
 # Relay HPC jobs
 
-List your Slurm jobs on demand, including state, runtime, node count and pending reason.
+Inspect your Slurm jobs from the pane connected to the cluster.
 
-The current implementation uses structured job rows with local text/state
-filtering. Search controls stay visible while the job list scrolls. At most 500
-rows are loaded, with the observed queue count and an explicit partial-results
-notice. Filters apply only to loaded rows. Missing Slurm, unavailable schedulers,
-malformed rows and incompatible helpers produce errors rather than an empty list.
+![HPC jobs in Relay with synthetic data](docs/images/preview.jpg)
 
-Component verification covers parser/limit/failure cases, package lifecycle,
-an actual scheduler query and manual native-UI search/filter/empty/large-queue
-checks. Installed-app and wheel/trackpad acceptance are still outstanding;
-this is not a release-ready claim.
+*Actual native Relay component captured September 19, 2026 in an isolated test window. Synthetic data only. Development preview—not a promise that these features are in the released app.*
 
-## Status and compatibility
+## Status
 
-Experimental native-tool package. Requires the Relay build that implements
-the `tool` contribution and the matching `relayd plugin` helper. Older Relay
-builds reject this package safely. This is a data-only package: the implementation
-lives in [Relay](https://github.com/genomewalker/relay-terminal), not executable
-code downloaded from this repository. No install hooks or background polling.
+The published **v0.1.0** is an experimental read-only prerelease. Use that exact tag for the published feature set.
 
-The native implementation is under development and has not yet passed installed-app
-acceptance. Do not mistake a manifest for a production-ready extension.
+Features and screenshots here describe the current Relay development implementation. A compatible app and matching helper are required; installed-app and release acceptance remain incomplete.
 
-## Install and use
+This is a **data-only package**. Its manifest selects operations implemented in [Relay](https://github.com/genomewalker/relay-terminal). It does not download executable plugin code, run install hooks or add background polling.
 
-When a tagged release is available, open Relay Settings → Plugins, enter
-`genomewalker/relay-plugin-hpc-jobs` and its exact tag, review the digest and
-permissions, install disabled, then Enable. Select a terminal pane and open
-the puzzle-piece button in the workspace toolbar. Select this tool, verify the
-host/directory, and choose **Allow once & refresh**. Each refresh is explicit.
+## Features
 
-Updates require another reviewed version and start disabled. Disable, Roll back
-and Uninstall are available in Settings. Safe mode suppresses all plugin tools.
+- Owned-job listing with ID, name, state, partition, elapsed time, node count and pending reason.
+- Local text/state filters; anchored controls while the job list scrolls.
+- Queue totals and explicit partial results when only 500 rows are loaded.
 
-## Limits
+## Install
 
-Slurm must be installed on the selected host. Job logs, resource history, submission and cancellation are not implemented.
+Use the experimental `v0.1.0` release.
 
-The captured pane selects the connection; switching tabs does not retarget
-an in-flight request. Jobs belong to the connected user across all projects,
-not only the selected directory. Remote hosts need a matching helper installed through Relay's
-existing approved setup flow. Agent processes are never restarted by this plugin.
+1. Use a compatible Relay app and matching `relayd` on the target host.
+2. Open **Settings → Plugins**, enter `genomewalker/relay-plugin-hpc-jobs` and the exact released tag.
+3. Review the repository, digest and permissions. Install, then explicitly Enable.
+4. Select the intended terminal pane and click the puzzle-piece toolbar button.
 
-## Package verification
+Updates require another review and start disabled. Disable, Roll back and Uninstall are available in Settings. Safe mode suppresses plugin tools. Existing release assets must not be overwritten.
 
-```sh
-python3 -m json.tool relay-plugin.json
-```
+## Use
 
-Runtime, path-containment, payload-integrity and permission tests live alongside
-the implementation in Relay. Publish `relay-plugin.json` as a release asset only
-after those tests and the corresponding installed-app acceptance checks pass.
+Select HPC jobs, confirm the host and refresh. Filter by text or state; filters only search the loaded rows.
 
-## License
+The panel captures its originating pane and connection; changing tabs does not retarget a request. File tools need a known working directory. Reopen the panel from the intended directory when necessary. Each read is explicit; active terminal workers and agents are not restarted.
 
-No license has been selected yet. Public visibility does not grant a reuse license.
+## Permissions and safety
+
+`remoteOperation`: fixed scheduler queries on the captured connection, not arbitrary package-supplied commands.
+
+Relay checks the enabled package and digest before running and before showing results. An incompatible helper produces an error, not a misleading empty result.
+
+## Limits and remaining work
+
+The published v0.1.0 is read-only. Job details, bounded log tails and separately authorized submit/cancel operations exist in the development implementation but are NOT included in v0.1.0. API-3/0.2.0 remains unpublished; real scheduler mutations have not passed acceptance. No resource-history charts.
+
+## Verification
+
+Parser, bounds, failure cases, package lifecycle and native list/filter behavior were tested. A real scheduler query was tested previously. The screenshot contains synthetic jobs; no jobs were submitted or cancelled.
+
+The latest combined development run reported 216 Swift tests (one optional network test skipped); the Go race suite passed. These checks do not substitute for installed-app, remote-error, accessibility or release acceptance of the exact versions you deploy.
+
+## Development and issues
+
+Validate the manifest with `python3 -m json.tool relay-plugin.json`. Native implementation and tests live in [Relay](https://github.com/genomewalker/relay-terminal), not this repository. Report runtime problems there with app/helper versions, reproduction steps and redacted diagnostics. Manifest and documentation issues belong here.
+
+No license has been selected for this package yet. Public visibility alone does not grant a reuse license.
